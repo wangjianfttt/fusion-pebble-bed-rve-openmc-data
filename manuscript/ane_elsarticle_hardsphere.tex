@@ -347,7 +347,7 @@ includes the nuclides required by the present model ($^6$Li, $^7$Li,
 $^9$Be, $^{16}$O, $^{28}$Si and $^4$He) at 293.6, 600 and 900 K, but it does
 not include photon data and is therefore used only for the neutron-mode
 axial-vacuum sensitivity pair.  The second used a FENDL-3.2c neutron ACE
-library~\cite{iaeaFendl32c} downloaded locally from the IAEA, transferred to
+library~\cite{iaeaFendl32c,schnabel2024fendl} downloaded locally from the IAEA, transferred to
 the remote workstation and converted to OpenMC HDF5 with
 \texttt{openmc\_data} 2.4.0~\cite{openmcData} and OpenMC 0.15.0.  The newly
 generated boundary, photon-transport, ENDF/B-VIII.0 and
@@ -1166,10 +1166,10 @@ Plasma Physics, Chinese Academy of Sciences (DSJJ-2025-08), and the China
 Post-doctoral Science Foundation under Grant Number 2024M753266.
 
 % ============================================================
-\begin{thebibliography}{25}
+\begin{thebibliography}{22}
 
 \bibitem{giancarli2018}
-Giancarli L, et al.\ Overview of the ITER TBM Program.
+Giancarli L, et al.\ ITER TBM Program and associated system engineering.
 \textit{Fusion Eng.\ Des.} 2018;136:815--821.
 doi:10.1016/j.fusengdes.2018.04.014.
 
@@ -1189,8 +1189,7 @@ calculations for fusion blankets. \textit{Fusion Eng.\ Des.} 2025;220:115377.
 doi:10.1016/j.fusengdes.2025.115377.
 
 \bibitem{sato2006}
-Sato S, Verzilov Y, Ochiai K, Wada M, Kubota N, Kondo K, Yamauchi M,
-Nishitani T.\ Experimental study on nuclear properties of water cooled pebble
+Sato S, et al.\ Experimental study on nuclear properties of water cooled pebble
 bed blanket. In: \textit{Proceedings of the 21st IAEA Fusion Energy
 Conference}; 2006. Paper FT/P5-13.
 
@@ -1269,13 +1268,18 @@ standards and thermal scattering data. \textit{Nucl.\ Data Sheets}
 
 \bibitem{iaeaFendl32c}
 International Atomic Energy Agency Nuclear Data Section. Fusion Evaluated
-Nuclear Data Library, FENDL-3.2c. Available at:
+Nuclear Data Library, FENDL-3.2c. 2025. Available at:
 \url{https://nds.iaea.org/fendl/}; accessed 11 June 2026.
 
+\bibitem{schnabel2024fendl}
+Schnabel G, Aldama DL, Bohm T, et al.\ FENDL: A library for fusion research
+and applications. \textit{Nucl.\ Data Sheets} 2024;193:1--78.
+doi:10.1016/j.nds.2024.01.001.
+
 \bibitem{njoy2016}
-MacFarlane RE, Muir DW, Boicourt RM, Kahler AC. The NJOY nuclear data
-processing system, version 2016. Los Alamos National Laboratory report
-LA-UR-17-20093; 2017.
+Macfarlane R, Muir DW, Boicourt RM, Kahler AC, Conlin JL. The NJOY Nuclear
+Data Processing System, Version 2016. Los Alamos National Laboratory report
+LA-UR-17-20093; 2017. doi:10.2172/1338791.
 
 \bibitem{openmcData}
 Shimwell J, et al. \texttt{openmc\_data}: tools for processing and downloading
