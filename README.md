@@ -2,6 +2,8 @@
 
 This data package describes the reproducibility materials for the Annals of Nuclear Energy manuscript "OpenMC hard-sphere RVE study of homogenisation bias in Li4SiO4/Be pebble beds".
 
+Archived release: https://doi.org/10.5281/zenodo.20636518
+
 ## Scope
 
 The calculations are local, source-normalised representative volume element (RVE) OpenMC calculations.  They do not represent full-blanket tritium breeding ratio margins.

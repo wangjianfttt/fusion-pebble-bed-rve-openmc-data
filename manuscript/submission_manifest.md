@@ -74,7 +74,7 @@ manuscript unless regenerated:
 
 - Confirm author order, affiliations and corresponding-author information.
 - Confirm funding, acknowledgements and CRediT contribution statement.
-- Insert public repository DOI or accession link in the Data and code availability statement.
+- Public repository DOI inserted in the Data and code availability statement: `10.5281/zenodo.20636518`.
 - FENDL-3.2c PF=0.618 baseline rerun is complete under `results/sensitivity/pf618_fendl32c_80x30k/`; no FENDL rerun remains as an author action.
 - Confirm whether Annals of Nuclear Energy requires separate source files,
   highlights and/or graphical abstract at initial submission.

@@ -6,6 +6,8 @@ authors:
   - family-names: Wang
     given-names: Jian
 repository-code: "https://github.com/wangjianfttt/fusion-pebble-bed-rve-openmc-data"
+doi: "10.5281/zenodo.20636518"
+url: "https://doi.org/10.5281/zenodo.20636518"
 date-released: "2026-06-11"
 license: MIT
 keywords:
