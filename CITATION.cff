@@ -5,7 +5,7 @@ type: dataset
 authors:
   - family-names: Wang
     given-names: Jian
-repository-code: "https://github.com/TO-BE-UPDATED/fusion-pebble-bed-rve-openmc-data"
+repository-code: "https://github.com/wangjianfttt/fusion-pebble-bed-rve-openmc-data"
 date-released: "2026-06-11"
 license: MIT
 keywords:
