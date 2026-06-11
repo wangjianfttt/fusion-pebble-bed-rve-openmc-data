@@ -1,0 +1,5 @@
+Hard-sphere RVEs quantify homogenisation bias in Li4SiO4/Be beds.
+Explicit void topology raises local TPR6 and Be(n,2n) responses.
+ENDF/B-VIII.0 and FENDL reruns preserve the trend.
+Boundary and photon checks constrain heating interpretation.
+Results are local source-normalised RVE responses, not blanket TBR.

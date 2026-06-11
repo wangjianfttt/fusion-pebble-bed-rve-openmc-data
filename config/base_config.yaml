@@ -1,0 +1,49 @@
+# ==============================================================================
+# Base Configuration for DEM–OpenMC Coupled Simulation (Phase 3)
+# ==============================================================================
+
+seed: 42
+n_pebbles: 800
+pebble_radius_avg: 0.10
+pebble_radius_std: 0.005
+rve_size_x: 1.6
+rve_size_y: 1.6
+rve_size_z: 1.6
+target_packing_fraction: 0.62
+breeder_volume_fraction: 0.60
+beryllium_volume_fraction: 0.40
+
+temperature: 823.0
+
+# --- Blanket slab parameters (Phase 3) ---
+blanket:
+  width: 1.0                     # cm, X-Y dimension (reflective BC)
+  fw_thickness: 0.2              # cm, first wall
+  breeder_thickness: 8.0         # cm, pebble bed zone
+  be_thickness: 1.5              # cm, beryllium multiplier zone
+  bw_thickness: 0.2              # cm, back wall / manifold
+  coolant_channel_width: 0.4     # cm
+  coolant_channel_pitch: 2.0     # cm, spacing between channels
+
+# --- Neutronics ---
+openmc_batches: 200
+openmc_particles: 50000
+openmc_inactive: 0
+plasma_dt_neutron_energy: 14.07e6
+source_type: "planar"
+
+# --- Tritium transport (0-D) ---
+tritium:
+  diffusion_coeff_li4sio4: 1.0e-14    # m2/s at 823K
+  diffusion_coeff_be: 1.0e-11
+  solubility_li4sio4: 1.0e-3          # mol/m3/Pa^0.5
+  solubility_be: 1.0e-4
+  purge_flow_rate: 1.0e-5             # m3/s (He purge)
+  purge_pressure: 1.0e5               # Pa
+  irradiation_time: 365.0              # days
+
+output_dir: "data"
+processed_dir: "data/processed"
+openmc_results_dir: "data/openmc_results"
+figures_dir: "figures"
+tables_dir: "tables"

@@ -1,0 +1,99 @@
+--- results/sensitivity/pf618_boundary_reflective_10x5k/software_versions.txt ---
+Generated: 2026-06-10T23:37:50
+Host: wangjian-Precision-7920-Tower
+Platform: Linux-6.8.0-111-generic-x86_64-with-glibc2.35
+Python: 3.10.12
+OpenMC Python: 0.15.0
+OpenMC executable: /home/wangjian/.local/bin/openmc
+
+OpenMC version 0.15.0
+Git SHA1: 55b52b7ef3c9415ce045712132bf31c2a013d8c8
+Copyright (c) 2011-2024 MIT, UChicago Argonne LLC, and contributors
+MIT/X license at <https://docs.openmc.org/en/latest/license.html>
+Build type:            Release
+Compiler ID:           GNU 11.4.0
+MPI enabled:           no
+Parallel HDF5 enabled: no
+PNG support:           yes
+DAGMC support:         no
+libMesh support:       no
+MCPL support:          no
+NCrystal support:      no
+Coverage testing:      no
+Profiling flags:       no
+UWUW support:          no
+
+--- results/sensitivity/pf618_photon_80x30k/software_versions.txt ---
+Generated: 2026-06-10T23:43:35
+Host: wangjian-Precision-7920-Tower
+Platform: Linux-6.8.0-111-generic-x86_64-with-glibc2.35
+Python: 3.10.12
+OpenMC Python: 0.15.0
+OpenMC executable: /home/wangjian/.local/bin/openmc
+
+OpenMC version 0.15.0
+Git SHA1: 55b52b7ef3c9415ce045712132bf31c2a013d8c8
+Copyright (c) 2011-2024 MIT, UChicago Argonne LLC, and contributors
+MIT/X license at <https://docs.openmc.org/en/latest/license.html>
+Build type:            Release
+Compiler ID:           GNU 11.4.0
+MPI enabled:           no
+Parallel HDF5 enabled: no
+PNG support:           yes
+DAGMC support:         no
+libMesh support:       no
+MCPL support:          no
+NCrystal support:      no
+Coverage testing:      no
+Profiling flags:       no
+UWUW support:          no
+
+--- results/sensitivity/pf618_endfb80_80x30k/software_versions.txt ---
+Generated: 2026-06-11T10:18:52
+Host: wangjian-Precision-7920-Tower
+Platform: Linux-6.8.0-111-generic-x86_64-with-glibc2.35
+Python: 3.10.12
+OpenMC Python: 0.15.0
+OpenMC executable: /home/wangjian/.local/bin/openmc
+
+OpenMC version 0.15.0
+Git SHA1: 55b52b7ef3c9415ce045712132bf31c2a013d8c8
+Copyright (c) 2011-2024 MIT, UChicago Argonne LLC, and contributors
+MIT/X license at <https://docs.openmc.org/en/latest/license.html>
+Build type:            Release
+Compiler ID:           GNU 11.4.0
+MPI enabled:           no
+Parallel HDF5 enabled: no
+PNG support:           yes
+DAGMC support:         no
+libMesh support:       no
+MCPL support:          no
+NCrystal support:      no
+Coverage testing:      no
+Profiling flags:       no
+UWUW support:          no
+
+--- results/sensitivity/pf618_fendl32c_80x30k/software_versions.txt ---
+Generated: 2026-06-11T10:39:54
+Host: wangjian-Precision-7920-Tower
+Platform: Linux-6.8.0-111-generic-x86_64-with-glibc2.35
+Python: 3.10.12
+OpenMC Python: 0.15.0
+OpenMC executable: /home/wangjian/.local/bin/openmc
+
+OpenMC version 0.15.0
+Git SHA1: 55b52b7ef3c9415ce045712132bf31c2a013d8c8
+Copyright (c) 2011-2024 MIT, UChicago Argonne LLC, and contributors
+MIT/X license at <https://docs.openmc.org/en/latest/license.html>
+Build type:            Release
+Compiler ID:           GNU 11.4.0
+MPI enabled:           no
+Parallel HDF5 enabled: no
+PNG support:           yes
+DAGMC support:         no
+libMesh support:       no
+MCPL support:          no
+NCrystal support:      no
+Coverage testing:      no
+Profiling flags:       no
+UWUW support:          no

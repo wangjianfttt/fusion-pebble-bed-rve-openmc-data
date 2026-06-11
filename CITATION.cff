@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this data package, please cite the associated manuscript and archived repository."
+title: "Reproducibility data for OpenMC hard-sphere RVE study of homogenisation bias in Li4SiO4/Be pebble beds"
+type: dataset
+authors:
+  - family-names: Wang
+    given-names: Jian
+repository-code: "https://github.com/TO-BE-UPDATED/fusion-pebble-bed-rve-openmc-data"
+date-released: "2026-06-11"
+license: MIT
+keywords:
+  - OpenMC
+  - fusion neutronics
+  - pebble bed
+  - Li4SiO4
+  - beryllium
+  - homogenisation bias

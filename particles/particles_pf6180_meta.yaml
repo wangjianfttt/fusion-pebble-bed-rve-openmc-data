@@ -1,0 +1,19 @@
+generator: scripts/generate_pf62_fcc_vacancy_packing.py
+seed: 20261014
+method: random-vacancy FCC parent bed with hard-sphere Monte Carlo perturbation
+n_pebbles: 800
+rve_size_x: 1.7568312194989333
+rve_size_y: 1.7568312194989333
+rve_size_z: 1.7568312194989333
+radius_cm: 0.1
+density_scale: 1.0
+target_packing_fraction: 0.618
+packing_fraction: 0.618
+breeder_count: 480
+beryllium_count: 320
+min_gap_cm: 2.1140789507878566e-08
+overlap_pairs: 0
+max_overlap_cm: 0.0
+near_contact_pairs: 0
+min_wall_gap_cm: -1.3877787807814457e-16
+accepted_mc_moves: 1243

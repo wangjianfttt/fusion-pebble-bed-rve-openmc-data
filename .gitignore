@@ -1,0 +1,11 @@
+*.h5
+*.hdf5
+*.ace
+*.zip
+*.tar.xz
+*.tgz
+*.tmp
+.DS_Store
+.openmc_data/
+__pycache__/
+*.pyc

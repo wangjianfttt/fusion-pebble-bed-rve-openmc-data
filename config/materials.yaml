@@ -1,0 +1,40 @@
+# ==============================================================================
+# Materials Definition for Fusion Breeder RVE (Phase 2)
+# ==============================================================================
+# Added: Eurofer steel (Fe, Cr, W), He coolant
+
+Li4SiO4_breeder:
+  density: 2.40
+  enrichment_Li6: 0.90
+  temperature: 823.0            # K, operating temperature
+  elements:
+    Li6:  { fraction: 0.166, percent_type: "ao" }
+    Li7:  { fraction: 0.018, percent_type: "ao" }
+    Si:   { fraction: 0.143, percent_type: "ao" }
+    O:    { fraction: 0.673, percent_type: "ao" }
+
+Be_multiplier:
+  density: 1.85
+  temperature: 823.0
+  elements:
+    Be9: { fraction: 1.0, percent_type: "ao" }
+
+Eurofer_steel:
+  density: 7.80                    # g/cm3
+  temperature: 600.0               # K, structure temperature
+  elements:
+    Fe56: { fraction: 0.89, percent_type: "ao" }
+    Cr52: { fraction: 0.09, percent_type: "ao" }
+    W184: { fraction: 0.02, percent_type: "ao" }
+
+He_coolant:
+  density: 0.0072                  # g/cm3 at 600K, 8 MPa
+  temperature: 600.0
+  elements:
+    He4: { fraction: 1.0, percent_type: "ao" }
+
+void:
+  density: 0.001
+  temperature: 600.0
+  elements:
+    He4: { fraction: 1.0, percent_type: "ao" }

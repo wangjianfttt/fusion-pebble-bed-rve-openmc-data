@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\centering
+\caption{PF=0.618 sensitivity summary for paired homogenised and geometry-resolved RVE calculations.  All values are resolved--homogenised relative shifts, $(B/A-1)\times100$ \%, with propagated one-standard-deviation (1$\sigma$) statistical uncertainty.  TPR$_6$ is the local $^6$Li(n,t) tritium-production response per source neutron.  The axial-vacuum ENDF/B-VII.1, ENDF/B-VIII.0, FENDL-3.2c and photon-transport rows used 80 fixed-source batches with 30000 particles per batch.  The all-reflective case used 10 fixed-source batches with 5000 particles per batch because the absence of axial leakage substantially lengthened resolved-geometry particle histories.  The photon-transport row is used for heating-score interpretation; its unfiltered flux tally contains both neutron and photon track-length contributions and is not interpreted as neutron flux.}
+\label{tab:pf618_sensitivity}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.0cm}ccccc}
+\toprule
+\textbf{Case} & \textbf{TPR$_6$} & \textbf{H3 production} & \textbf{$^9$Be(n,2n)} & \textbf{Heating} & \textbf{Flux} \\
+\midrule
+Axial vacuum, neutron mode & $+17.47\pm0.71$ & $+29.13\pm0.25$ & $+45.80\pm0.11$ & $-18.49\pm0.04$ & $+23.08\pm0.09$ \\
+Axial vacuum, ENDF/B-VIII.0 & $+18.00\pm0.74$ & $+29.32\pm0.26$ & $+46.11\pm0.11$ & $-19.01\pm0.04$ & $+23.14\pm0.09$ \\
+Axial vacuum, FENDL-3.2c & $+17.73\pm0.73$ & $+29.22\pm0.26$ & $+45.78\pm0.11$ & $-18.64\pm0.04$ & $+23.09\pm0.09$ \\
+All-reflective, neutron mode & $+15.57\pm0.72$ & $+15.91\pm0.71$ & $+61.52\pm0.87$ & $-1.89\pm0.38$ & $+130.97\pm3.24$ \\
+Axial vacuum, photon transport & $+17.16\pm0.70$ & $+29.02\pm0.25$ & $+45.75\pm0.11$ & $-17.70\pm0.17$ & $+23.30\pm0.12$$^{a}$ \\
+\bottomrule
+\end{tabular}
+}
+\begin{flushleft}
+\footnotesize $^{a}$Unfiltered OpenMC flux with photon transport enabled includes neutron and photon contributions; this value is retained in the source CSV but is not used as a neutron-flux metric.
+\end{flushleft}
+\end{table}

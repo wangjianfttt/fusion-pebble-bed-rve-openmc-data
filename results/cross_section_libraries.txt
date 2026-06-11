@@ -1,0 +1,14 @@
+--- results/sensitivity/pf618_boundary_reflective_10x5k/cross_section_libraries.txt ---
+ENDFB-7.1-NNDC: /home/wangjian/openmc_data/endfb-vii.1-hdf5/cross_sections.xml
+
+--- results/sensitivity/pf618_photon_80x30k/cross_section_libraries.txt ---
+ENDFB-7.1-NNDC: /home/wangjian/openmc_data/endfb-vii.1-hdf5/cross_sections.xml
+
+--- results/sensitivity/pf618_endfb80_80x30k/cross_section_libraries.txt ---
+ENDFB-8.0-NNDC-minimal: /data1/wangjian/openmc_data/endfb-viii.0-nndc-minimal-hdf5/hdf5/cross_sections.xml
+
+--- results/sensitivity/pf618_fendl32c_80x30k/cross_section_libraries.txt ---
+FENDL-3.2c-ACE: /data1/wangjian/openmc_data/fendl-3.2c-ace-hdf5/cross_sections.xml
+
+ENDFB-8.0-NNDC-minimal was generated from official NNDC ENDF/B-VIII.0 source files using NJOY2016.68 and OpenMC 0.15.0. The local OpenMC.org Box HDF5 links returned HTTP 404 on 2026-06-11, so a minimal neutron-only library was generated for Li6, Li7, Be9, O16, Si28 and He4 at 293.6, 600 and 900 K. Photon data are not included in this minimal library.
+FENDL-3.2c-ACE was generated from the IAEA FENDL-3.2c neutron ACE archive. The archive was downloaded locally on 2026-06-11, verified with SHA256, transferred to /data1 on the remote workstation, and converted with openmc_data 2.4.0 and OpenMC 0.15.0. Remote downloading was not used.
