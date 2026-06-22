@@ -1,0 +1,1292 @@
+% ============================================================
+%  Fusion Engineering and Design / Elsevier elsarticle submission source.
+%  Generated from manuscript/paper_final_en.tex without changing scientific data.
+% ============================================================
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{graphicx,booktabs,amsmath,amssymb,enumitem,multirow,float,array}
+\usepackage[hidelinks]{hyperref}
+\graphicspath{{figures/}{../figures/publication/}{../figures/hardsphere_pf_sweep/}{../figures/hardsphere_pf618_seed_replicates/}{../figures/hardsphere_pf618_spectrum/}{../figures/hardsphere_spatial_diagnostics/}{../figures/mechanism_pf62/}}
+\setlength{\emergencystretch}{2em}
+\biboptions{numbers,sort&compress}
+
+\journal{Fusion Engineering and Design}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Pebble-scale topology effects on homogenised neutronics of Li$_4$SiO$_4$/Be breeder beds}
+
+\author[a,b]{Jian Wang\corref{cor1}}
+\ead{wjfttt@mail.ustc.edu.cn}
+\author[a]{Hang Zhang}
+\author[a]{Haoxi Wang}
+\author[a]{Zhiyuan Liu}
+\author[a]{Haishun Deng}
+\author[a,b]{Wei Wen}
+\author[a]{Gang Shen}
+
+\cortext[cor1]{Corresponding author.}
+\address[a]{Anhui University of Science and Technology, Huainan, Anhui, China}
+\address[b]{Institute of Plasma Physics, Hefei Institutes of Physical Science, Chinese Academy of Sciences, Hefei, Anhui, China}
+
+\begin{abstract}
+Volume-homogenised breeder-bed models remove the connected He void topology
+that controls neutron free paths, first-collision ordering and fast-neutron
+exposure of Be multiplier pebbles.  This study compares material-equivalent
+homogenised and geometry-resolved Li$_4$SiO$_4$/Be representative volume
+elements (RVEs) in OpenMC using strict non-overlapping hard-sphere packings.
+For the audited baseline at packing fraction (PF) = 0.618, with reflective
+lateral boundaries and axial vacuum boundaries, the resolved geometry increases
+the local $^6$Li(n,t) tritium-production response (TPR$_6$) by
+$+17.47\pm0.71$ \%, total H3-production by $+29.13\pm0.25$ \% and
+$^9$Be(n,2n) by $+45.80\pm0.11$ \%, while reducing the OpenMC neutron-mode
+heating score by $-18.49\pm0.04$ \% and increasing track-length flux by
+$+23.08\pm0.09$ \%.  A PF sweep from 0.56 to 0.618 shows decreasing
+topology-induced shifts with increasing PF, and three independent PF=0.618
+realisations preserve the sign and order of the bias.  A 50-group spectrum
+diagnostic gives a resolved/homogenised flux ratio of 1.221 above the
+approximate $^9$Be(n,2n) threshold, supporting void-channel streaming and
+delayed solid collisions.  ENDF/B-VIII.0 and FENDL-3.2c reruns preserve the
+same bias trend, while an all-reflective check shows that neutron return
+changes the partitioning of the local response.  A photon-transport rerun gives
+a heating shift of $-17.70\pm0.17$ \%, close to the neutron-mode result.  These
+are source-normalised local RVE responses, not full-blanket TBR margins.
+\end{abstract}
+
+\begin{keyword}
+Fusion breeder blanket \sep OpenMC \sep Pebble-bed microstructure \sep $^6$Li(n,t) tritium-production response \sep Beryllium multiplier \sep Homogenisation bias
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}
+% ============================================================
+
+Solid ceramic breeder blankets, in which millimetre-scale Li$_4$SiO$_4$ or
+Li$_2$TiO$_3$ pebbles are mixed with beryllium multiplier pebbles and cooled by
+helium purge gas, are central to several International Thermonuclear
+Experimental Reactor (ITER) test blanket module (TBM), China Fusion Engineering
+Test Reactor (CFETR) and demonstration fusion power plant (DEMO) blanket
+concepts~\cite{giancarli2018,fischer2015,wang2020}.  Neutronic analyses of
+these systems commonly replace the granular breeder bed with a
+volume-homogenised mixture~\cite{fischer2015,shen2020,wang2020}.  This
+approximation is attractive for full-device Monte Carlo transport because it
+reduces geometric complexity and makes large blanket sectors computationally
+tractable.  However, homogenisation also removes the inter-pebble He pore
+network, local packing-fraction variations and discrete breeder--multiplier
+interfaces.  These features influence the early collision history of
+14.07\,MeV deuterium--tritium (D--T) source neutrons.  The loss of
+pebble-scale topology is therefore not merely a modelling convenience issue,
+but a neutronic accuracy issue for local $^6$Li(n,t) tritium-production response (TPR$_6$),
+$^9$Be(n,2n) multiplication, neutron flux and heating response.
+
+The physical basis for this concern is well established.  Random sphere
+packings exhibit wall-induced packing-fraction oscillations and approach their
+interior packing state only after several particle diameters
+~\cite{bernal64,jodrey85,gong2017,zhang2022}.  In a solid breeder zone, this
+heterogeneity changes neutron free paths, first-collision locations and the
+competition among threshold multiplication in Be, absorption in $^6$Li-bearing
+breeder material and energy deposition in the solid phases.  When the same
+material inventory is homogenised before solving transport, these energy- and
+space-dependent processes are collapsed into a single macroscopic cross
+section.  The key issue is therefore to determine when a homogenised
+description preserves the relevant reaction balance and when explicit pebble
+geometry is required.
+
+Previous pebble-bed neutronics studies have shown that discrete geometry can
+affect tritium production and local reaction distributions.  For example, Zhang
+and Guo~\cite{zhang2025} compared homogenised, regular-packing and
+random-packing models for Li$_2$O mock-up and helium-cooled solid-breeder
+blanket calculations.  Their random-packing model reduced the average C/E
+deviation of diagnostic-pellet tritium-production rates by approximately
+20 \%, and their Li$_4$SiO$_4$ blanket analysis showed that a small
+zone-integrated deviation can coexist with appreciable local deviations near
+pebble-bed boundaries.  These studies establish the importance of explicit
+particle geometry, but four gaps remain for
+mechanism-oriented RVE analysis.  First, the physical interpretation of the
+bias is often limited to integral tritium production, with less attention to
+neutron spectrum evolution, $^9$Be(n,2n) threshold reactions, local heating and
+target-normalised reaction rates.  Second, many comparisons use one packing or
+one material composition, so the sensitivity to PF, Be loading and independent
+packing realisations is not fully quantified.  Third, the distinction between a
+local $^6$Li(n,t) response, total H3-production response and full-blanket TBR is
+often not stated sharply enough for reviewer-proof interpretation.  Fourth, the
+magnitude of the bias depends strongly on boundary conditions.  Results
+obtained in leakage-dominated local models therefore cannot be transferred
+directly to reflected, multilayer engineering blankets without qualification.
+
+The underlying neutronics ingredients of the present calculation are supported
+by external fusion-blanket benchmark studies.  The Frascati Neutron Generator
+(FNG) HCPB test blanket module mock-up measured tritium production rates and
+neutron flux in a Be/Li-bearing blanket environment under 14 MeV D--T neutron
+irradiation, providing a reference experiment for nuclear data and transport
+methods in ceramic breeder blanket analyses~\cite{batistoni2007}.  More recent
+water-cooled ceramic breeder (WCCB) mock-up experiments further demonstrated
+tritium-production measurements in CFETR-relevant ceramic breeder blanket
+configurations under D--T neutron irradiation~\cite{zhu2021}.  In parallel,
+OpenMC has been compared with MCNP, Serpent and experimental fusion benchmarks,
+including FNG-HCPB-type responses, with good agreement for tritium-production
+and activation responses in the benchmark problems considered~\cite{valentine2022}.
+As an executable check of the transport environment used here, we also
+reproduced the OKTAVIAN aluminium-sphere neutron-leakage benchmark from the
+SINBAD fusion benchmark suite~\cite{kodeli2021,konno2010}.  The present OpenMC
+calculation gave a median calculation-to-experiment (C/E) ratio of 1.213, a
+geometric-mean C/E of 1.046 and 85.7 \% of valid energy groups within a factor
+of two of the measured leakage spectrum.  The corresponding public reference
+calculations give 87.3 \% for OpenMC 0.14.0 with ENDF/B-VIII.0 and 88.8 \% for
+MCNP 6.1.1b with ENDF/B-VIII.0.  This benchmark does not validate the
+Li$_4$SiO$_4$/Be RVE geometry directly, but it verifies that the local OpenMC
+installation, D--T source treatment and source-normalised leakage-spectrum
+tallying reproduce a standard fusion-neutronics experiment at the same overall
+accuracy level as published code-benchmark calculations.
+These studies support the D--T source normalisation, Li-bearing
+tritium-production tallies, Be multiplier physics and continuous-energy Monte
+Carlo workflow used here, but they do not constitute a direct validation of the
+Li$_4$SiO$_4$/Be RVE topology.  The present work therefore isolates a different
+question: the local homogenisation bias
+introduced by replacing a resolved Li$_4$SiO$_4$/Be/He pebble topology with a
+material-equivalent uniform medium.
+
+The central scientific question of this work is therefore how large a local
+homogenisation bias is introduced when a Li$_4$SiO$_4$/Be/He pebble-bed topology
+is replaced by a material-equivalent uniform medium, which transport mechanism
+controls the bias, and how robust this bias is to controlled changes in PF,
+multiplier inventory and hard-sphere realisation.  To address this question, we
+use a paired OpenMC workflow in which each representative volume element (RVE)
+is represented both as a homogenised material and as explicit constructive solid
+geometry (CSG) spheres.  The two descriptions conserve the same breeder,
+multiplier and purge-gas inventory.  Differences in TPR$_6$, total
+H3-production response, $^9$Be(n,2n), flux and heating can therefore be
+attributed to geometric topology, neutron free path and collision ordering
+rather than to changes in material composition.
+
+This study makes three contributions.  First, it establishes a strict
+hard-sphere OpenMC paired-comparison protocol and uses it to quantify local
+homogenisation-bias ranges for the baseline composition and a 10--60 vol.\% Be
+multiplier sweep.  Second, it performs a PF sweep and independent PF=0.618
+hard-sphere seed replicates to separate topology sensitivity and
+packing-to-packing variability from Monte Carlo tally uncertainty.  Third, it
+uses 50-group spectra and mesh tallies to connect the global tally shifts to
+fast-neutron streaming, threshold Be multiplication and spatial energy-deposition
+redistribution.  The resulting assessment route identifies when homogenisation
+is likely adequate and when explicit geometry or a local correction is required.
+
+The remainder of the paper is organised as follows.  Section~2 describes the
+homogenised and geometry-resolved OpenMC models, strict hard-sphere RVE
+generation, tally definitions and simulation settings.  Section~3 presents the
+microstructural characterisation, baseline homogenised--resolved comparison,
+Be-fraction mechanism sweep, packing-fraction sensitivity, independent-seed
+repeatability and spectral/spatial diagnostics.  Section~4 discusses the
+relation to previous pebble-bed neutronics studies, the role of boundary
+conditions and the engineering interpretation of the RVE results.  Section~5
+summarises the main conclusions and identifies the validation steps required
+before transferring local RVE corrections to full blanket calculations.
+
+% ============================================================
+\section{Methods}
+% ============================================================
+
+The calculation was designed as a paired comparison between two descriptions of
+the same material inventory: a volume-homogenised breeder-bed material and a
+geometry-resolved pebble bed.  The audited production cases use strict
+non-overlapping hard-sphere geometries.  This design ensures that changes in
+neutronic response are attributable to geometry, packing fraction or material
+labelling rather than to unintended changes in material inventory.
+
+\subsection{Homogenised model}
+
+The homogenised model represents the pebble bed and inter-pebble voids as a
+single uniform material.  Its nuclide density is the volume-weighted average of
+the constituent solids and the He purge gas at a nominal packing fraction
+(\textit{PF}) of approximately 0.62; the audited baseline OpenMC comparison uses
+PF=0.618.  The density and atomic fractions follow directly from
+mass conservation.  For each nuclide $j$,
+%
+\begin{equation}
+n_j^{\rm (hom)} = {\rm PF}\cdot\Bigl[f_{\rm Li_4SiO_4}\,n_j^{\rm (b)}
++ f_{\rm Be}\,n_j^{\rm (Be)}\Bigr]
++ (1-{\rm PF})\,n_j^{\rm (He)},
+\label{eq:hom}
+\end{equation}
+%
+where $f_{\rm Li_4SiO_4}=0.60$ and $f_{\rm Be}=0.40$ are the solid volume
+fractions of breeder and multiplier, respectively, and $n_j^{(\cdot)}$ are the
+nuclide densities in the corresponding pure materials.
+
+
+\subsection{Strict hard-sphere RVE generation}
+
+The resolved geometries used for the audited production results were generated
+as strict non-overlapping hard-sphere RVEs.  The baseline bed contains 800
+spherical pebbles in a cubic RVE.  A dense parent packing was generated and then
+perturbed while enforcing hard-sphere non-overlap and wall clearance.  The
+resulting particle lists were audited before OpenMC import by checking the RVE
+volume, total sphere volume, per-material sphere volume, packing fraction,
+nearest-neighbour gaps and overlap count.  Production geometries with any
+overlapping pair were excluded from the final evidence chain.
+
+Particles were assigned as Li$_4$SiO$_4$ breeder or Be multiplier pebbles
+according to the prescribed solid volume fraction.  The baseline inventory used
+60 vol.\% breeder and 40 vol.\% Be, with 90 \% $^6$Li enrichment.  For the
+Be-fraction mechanism sweep, the particle positions and radii were kept fixed
+and only the breeder/Be labels were reassigned.  This separates the effect of
+multiplier inventory from changes in packing topology.  For the PF sweep,
+strict non-overlapping hard-sphere RVEs were generated at PF=0.56, 0.58, 0.60,
+0.61 and 0.618.  These cases are treated as controlled topology perturbations,
+not as physical thermal-expansion or irradiation-swelling calculations.
+
+\subsection{Independent realisations and geometry validity}
+
+To assess whether the PF=0.618 result was tied to one particle arrangement,
+three independent strict hard-sphere realisations were generated and each was
+transported as a paired homogenised/resolved OpenMC calculation.  The
+independent-seed study quantifies packing-to-packing variability separately
+from OpenMC batchwise statistical uncertainty.  All production hard-sphere
+particle lists used in the PF sweep and seed-repeatability study have zero
+overlap pairs in the pre-transport geometry audit.  Direct radius-scaled
+thermal-expansion or swelling geometries are not used for the final physical
+claims unless they can be regenerated or relaxed into strictly non-overlapping
+geometries while conserving material inventory.
+
+\subsection{OpenMC geometry and materials}
+
+OpenMC~\cite{romano2015} was used for all neutron-transport calculations.
+Each pebble in the CSV particle listing was converted into an individual
+\texttt{openmc.Sphere} CSG region.  The inter-pebble void cell was the Boolean
+complement of all 800 sphere interiors within the RVE bounding box, giving a
+well-defined geometry of 801 cells (800~pebbles + 1~void).  Boundary conditions
+were reflective in $X$ and $Y$ (infinite sheet approximation) and vacuum at
+$\pm Z$.  The neutron source was an independent fixed source with strength
+1.0 in OpenMC source-particle normalisation.  Its spatial distribution was a
+planar box over $0\leq x\leq1.6$\,cm and $0\leq y\leq1.6$\,cm at $z=0$; the
+angular distribution was monodirectional along $+z$; and the energy
+distribution was discrete at 14.07\,MeV, representing D--T source neutrons.
+
+\begin{table}[ht]
+\centering
+\caption{Material definitions for the OpenMC neutron-transport calculations.
+The table lists the mass density, nuclide composition and temperature assigned
+to the Li$_4$SiO$_4$ breeder pebbles, Be multiplier pebbles and He purge-gas
+void phase in both the homogenised and geometry-resolved representative volume
+element (RVE) models.  The main PF and composition sweeps used Evaluated
+Nuclear Data File, release B-VII.1 (ENDF/B-VII.1), data distributed by the
+National Nuclear Data Center (NNDC).  Dedicated nuclear-data sensitivity pairs
+used ENDF/B-VIII.0 and FENDL-3.2c as described in Section~2.5.}
+\label{tab:materials}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{4.0cm}p{0.9cm}}
+\toprule
+\textbf{Material} & \textbf{Density (g/cm$^3$)} & \textbf{Nuclides} & \textbf{$T$ (K)} \\
+\midrule
+Li$_4$SiO$_4$ breeder & 2.40  & $^6$Li, $^7$Li (90 \% enriched), $^{28}$Si, $^{16}$O & 823 \\
+Be multiplier         & 1.85  & $^9$Be  & 823 \\
+He void               & 0.001 & $^4$He  & 600 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Tallies}
+
+Global tallies were scored in fixed-source normalisation per source neutron.
+The scalar tallies were \texttt{TBR\_global}, using the OpenMC score
+\texttt{(n,t)} for $^6$Li; \texttt{Be\_n2n}, using \texttt{(n,2n)} for
+$^9$Be; \texttt{heating\_total}, using the OpenMC \texttt{heating} score;
+\texttt{flux\_total}, using the track-length \texttt{flux} score; total and
+lithium-isotope-resolved \texttt{H3-production} tallies where available; and
+\texttt{dpa\_total}, using \texttt{damage-energy}.  The legacy tally name
+\texttt{TBR\_global} is retained in the data files, but the reported quantity
+is the local RVE $^6$Li(n,t) tritium-production response per source neutron
+(TPR$_6$), not a full-blanket design TBR.  Total H3-production response is
+reported separately and is also a local RVE response per source neutron rather
+than a full-blanket TBR.  OpenMC \texttt{heating} and \texttt{damage-energy}
+scores are native eV/source
+quantities; heating values are converted to MeV/source for reporting by
+multiplying by $10^{-6}$, whereas damage-energy is retained in eV/source.
+The unfiltered flux tally is reported as the OpenMC track-length flux tally
+(particle-cm/source) and is not volume-normalised.  When photon transport is
+enabled, an unfiltered OpenMC flux score includes all transported particle
+types; therefore, the photon-transport sensitivity run is used for heating-score
+interpretation, whereas its unfiltered flux value is not interpreted as neutron
+flux.  Spatial tallies used an
+$8\times8\times8$ regular Cartesian mesh over the RVE with the same
+\texttt{(n,t)}, \texttt{heating}, \texttt{flux}, \texttt{(n,2n)} and
+\texttt{damage-energy} scores.  Mesh heating is converted to MeV/source per
+mesh bin when reported; mesh flux is likewise a track-length tally per source
+particle unless explicitly divided by mesh-cell volume.
+
+\subsection{Simulation parameters and convergence}
+
+The archived and newly generated statepoints were confirmed to use OpenMC
+fixed-source mode rather than eigenvalue mode.  The audited hard-sphere PF
+sweep used 80 fixed-source batches with $3\times10^4$ source particles per
+batch.  The independent-seed repeatability study used 60 fixed-source batches
+with $2\times10^4$ source particles per batch.  The spectrum diagnostic used 80
+fixed-source batches with $3\times10^4$ source particles per batch.  The
+all-reflective boundary sensitivity pair used 10 fixed-source batches with
+$5\times10^3$ source particles per batch because suppressing axial leakage
+substantially lengthened particle histories in the explicit RVE.  The
+photon-transport heating-sensitivity pair used 80 fixed-source batches with
+$3\times10^4$ source particles per batch.  Tally means and
+one-standard-deviation uncertainties are therefore batch statistics over
+fixed-source realisations.
+Some archived XML files contain legacy \texttt{inactive} values of 50 for the
+main RVE cases and 20 for the Be-fraction scan; these entries are not
+eigenvalue inactive cycles and are not associated with fission-source
+convergence.  Photon transport was disabled in the main neutron-mode PF sweep
+and enabled only in the dedicated heating-sensitivity pair.  The random seed was
+42, and the statepoints were generated with OpenMC 0.15.0.  The main RVE cases
+used ENDF/B-VII.1 NNDC HDF5 data.  Two dedicated nuclear-data sensitivity
+pairs were rerun for the PF=0.618 axial-vacuum case.  The first used a minimal
+ENDF/B-VIII.0 neutron HDF5 library~\cite{brown2018endfb8} generated from
+official NNDC ENDF/B-VIII.0 source files using NJOY2016.68~\cite{njoy2016}
+and OpenMC 0.15.0.  This minimal library
+includes the nuclides required by the present model ($^6$Li, $^7$Li,
+$^9$Be, $^{16}$O, $^{28}$Si and $^4$He) at 293.6, 600 and 900 K, but it does
+not include photon data and is therefore used only for the neutron-mode
+axial-vacuum sensitivity pair.  The second used a FENDL-3.2c neutron ACE
+library~\cite{iaeaFendl32c,schnabel2024fendl} downloaded locally from the IAEA, transferred to
+the remote workstation and converted to OpenMC HDF5 with
+\texttt{openmc\_data} 2.4.0~\cite{openmcData} and OpenMC 0.15.0.  The newly
+generated boundary, photon-transport, ENDF/B-VIII.0 and
+FENDL-3.2c runs retained captured OpenMC standard output; no lost-particle
+warning was found.  The retained legacy PF-sweep output files contain tally
+summaries but not complete OpenMC standard output.  The
+resulting relative statistical uncertainty of the RVE-level $^6$Li(n,t) tally
+was 0.21--0.24 \% across the main PF sweep.
+
+\subsection{Benchmark context and code verification}
+
+The present RVE is not intended to reproduce the full geometry of a specific
+integral benchmark.  Instead, the calculation is anchored to benchmarked
+components of fusion blanket neutronics and then uses an internally paired
+comparison to isolate pebble-scale topology.  The FNG-HCPB experiment provides
+the closest experimental analogue because it combines 14 MeV D--T source
+irradiation, Be multiplier material, Li-bearing breeder regions, tritium
+production measurements and neutron-flux diagnostics in a helium-cooled pebble
+bed test blanket module mock-up~\cite{batistoni2007}.  The WCCB D--T
+irradiation experiment of Zhu et al.~\cite{zhu2021} provides an additional
+ceramic breeder benchmark for tritium-production prediction in a
+CFETR-relevant blanket mock-up.  At the code level, Valentine et al.~\cite{valentine2022}
+converted several fusion benchmark problems, including FNG-HCPB responses, to
+OpenMC and Serpent and compared them with established Monte Carlo workflows and
+available experimental data.  Those results support the use of OpenMC for the
+source-normalised reaction-rate quantities considered here.
+
+In addition, a local executable benchmark was run for this study using a
+constructive-solid-geometry reproduction of the OKTAVIAN aluminium-sphere
+experiment.  The model consisted of a 20 cm aluminium sphere, a 0.2 cm
+stainless-steel shell, a central D--T source spectrum and a 134-group neutron
+surface-current tally at the outer boundary.  The calculation used OpenMC
+0.15.0, ENDF/B-VII.1 data, 50 fixed-source batches and $2\times10^5$ source
+particles per batch.  After normalising the surface current to
+particle/source/cm$^2$, the 134-group leakage spectrum gave a median C/E of
+1.213, a geometric-mean C/E of 1.046, 85.7 \% of valid groups within a factor
+of two of experiment and a log-spectrum correlation coefficient of 0.823.  The
+broad-group C/E values were 1.413 for 0.10--1 MeV, 1.184 for 1--5 MeV, 1.194
+for 5--10 MeV, 0.724 for 10--15 MeV and 0.924 for 15--20.66 MeV.  This result
+shows that the OpenMC installation and tally normalisation used in the present
+work reproduce the overall magnitude and energy dependence of an established
+14 MeV fusion-neutronics leakage benchmark.
+
+As a closer blanket-specific benchmark target, a reconstruction of
+the JAEA/FNS Li$_2$O pebble-bed mock-up of Sato et al.~\cite{sato2006} was
+also implemented with the same OpenMC post-processing workflow.  The model used
+the published Be/F82H/Li$_2$O slab dimensions, natural-Li Li$_2$O packing
+fraction of 57.8 \%, two aluminium detector channels and eight detector
+segments per channel.  Detector H3-production tallies were normalised by the
+number of $^6$Li atoms in each detector segment and compared with digitised
+TPR curves from the published figures.  With an isotropic monoenergetic
+D--T source, the model reproduced the axial U-shaped tritium-production
+profile, with shape correlations of 0.897 and 0.943 for the two detector
+channels, but underpredicted the absolute TPR magnitude by about one third
+(mean OpenMC/experiment = 0.666 and 0.670).  A source-angle sensitivity
+calculation then bracketed the experiment: a forward-hemisphere source
+overpredicted the mean TPR by 34--37 \%, whereas a mixed backward/forward
+hemisphere source with a forward-probability parameter of 0.741 gave mean
+calculated-to-experimental ratios of 0.968 and 1.014 for detector channels 1
+and 2, respectively.  The corresponding channel-wise shape correlations were
+0.969 and 0.904.  These results show that the present OpenMC geometry,
+detector tally and $^6$Li inventory-normalisation chain can reproduce the
+order of magnitude and axial shape of an independent Li$_2$O pebble-bed TPR
+experiment when the source angular bias is represented.  However, this remains
+a source-angle-calibrated screening comparison rather than a formal C/E
+validation, because the published paper does not provide the full FNS
+energy--angle source distribution and the present reconstruction still uses a
+homogenised, rather than explicitly repeated, Li$_2$O pebble-bed layer.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{oktavian_al_benchmark_comparison.pdf}
+\caption{Comparison of the present OKTAVIAN-Al OpenMC benchmark calculation
+with experimental leakage data and public reference Monte Carlo results.
+Panel (a) compares broad-group calculated-to-experimental (C/E) ratios for the
+present OpenMC 0.15.0 calculation, a reference OpenMC 0.14.0 calculation and a
+reference MCNP 6.1.1b calculation.  The grey band denotes agreement within a
+factor of two.  Panel (b) compares integral agreement metrics for the same
+datasets.  The reference OpenMC and MCNP data are taken from the public
+OKTAVIAN benchmark database used by the OpenMC Fusion Benchmarks project.}
+\label{fig:oktavian_benchmark}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{li2o_fns_mixed_p0741_openmc_vs_sato_digitized.pdf}
+\caption{Source-angle-calibrated OpenMC reconstruction of the JAEA/FNS
+Li$_2$O pebble-bed mock-up compared with digitised tritium-production-rate
+(TPR) data from Sato et al.~\cite{sato2006}.  The OpenMC model uses the
+published Be/F82H/Li$_2$O slab dimensions, natural-Li Li$_2$O packing fraction
+of 57.8 \%, two aluminium detector channels and eight detector segments per
+channel.  Panel (a) compares detector-cell H3-production tallies normalised per
+$^6$Li atom per source neutron with the digitised experimental curves.  Panel
+(b) shows the OpenMC-to-experiment ratio for each detector segment; the grey
+band marks the 0.95--1.15 interval reported by Sato et al. for the original
+homogeneous-model C/E comparison, except at the rear boundary.  Error bars
+denote one standard deviation (1$\sigma$) from the OpenMC detector tallies.
+The source angular distribution is a calibrated mixed backward/forward
+hemisphere approximation and is used here only as a screening benchmark, not as
+a replacement for the complete FNS source description.}
+\label{fig:li2o_fns_benchmark}
+\end{figure}
+
+Beyond this code-verification benchmark, the present RVE workflow was checked
+by four RVE-specific consistency tests.  First, the homogenised and resolved
+cases use the
+same material inventory, so the reported differences are not caused by changes
+in Li$_4$SiO$_4$, Be or He atom densities.  Second, all hard-sphere production
+geometries were audited for packing fraction, wall clearance and zero sphere
+overlap before OpenMC import.  Third, tally scores, units and uncertainty
+propagation were audited directly from the available statepoint or raw result
+files.  Fourth, independent PF=0.618 hard-sphere realisations reproduced the
+same sign and order of the resolved--homogenised shifts.  Thus the external
+benchmarks support the transport-code and blanket-physics basis, and the
+Li$_2$O/FNS screening comparison checks the tritium-production tally
+normalisation against an independent pebble-bed experiment.  The paired RVE
+audits then support the interpretation that the present conclusions arise from
+pebble-scale void topology rather than from inventory or numerical bookkeeping
+artefacts.  A formal validation-grade extension would require the complete FNS
+energy--angle source description or an independent Li$_4$SiO$_4$/Be benchmark
+with published geometry, source and tally definitions.
+
+\subsection{Case matrix}
+
+Table~\ref{tab:cases} lists the calculation groups used in the audited
+hard-sphere analysis.  The previously explored direct radius-scaling
+deformation cases are not used as production evidence because such geometries
+must first pass strict non-overlap and material-inventory-conservation audits.
+
+\begin{table}[ht]
+\centering
+\caption{Audited simulation groups for the paired homogenised and
+geometry-resolved RVE calculations.  PF denotes packing fraction.  The table
+lists the main ENDF/B-VII.1 axial-vacuum production and diagnostic groups; the
+boundary-condition, photon-transport and nuclear-data sensitivity pairs are
+reported separately in Section~3.5.  Each paired calculation uses the same
+material inventory and 14.07 MeV deuterium--tritium source.  The PF sweep and
+independent-seed calculations use strict non-overlapping hard-sphere
+geometries.}
+\label{tab:cases}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{7.2cm}>{\raggedright\arraybackslash}p{1.2cm}}
+\toprule
+\textbf{Group} & \textbf{Purpose} & \textbf{PF or range} \\
+\midrule
+Baseline pair & Homogenised versus geometry-resolved hard-sphere RVE & 0.618 \\
+PF sweep & Topology sensitivity in paired hard-sphere RVEs & 0.560--0.618 \\
+Be-fraction sweep & Multiplier-inventory sensitivity at fixed topology & $\approx0.62$ \\
+Seed replicates & Independent hard-sphere realisations for repeatability & 0.618 \\
+Spectrum diagnostic & 50-group flux comparison for mechanism analysis & 0.618 \\
+Mesh diagnostic & Mid-plane spatial redistribution analysis & 0.618 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Results}
+% ============================================================
+
+\subsection{The generated RVE reproduces a dense random pebble bed}
+
+The generated packing provides a reproducible microstructural reference for the
+neutronic comparisons.  The nominal RVE reaches PF\,$=0.6200$, whereas the
+audited baseline transport comparison uses PF=0.618 after strict hard-sphere
+geometry filtering and material-inventory matching.  The interior axial
+packing-fraction profile that is nearly uniform and boundary perturbations
+confined to approximately one pebble diameter at the $\pm Z$ faces
+(Fig.~\ref{fig:microstructure}).  The coordination-number (CN) distribution peaks at
+CN$=7$ with a mean of 6.6, and the specific surface area ($S_v$) is
+$S_v=20.4$\,cm$^{-1}$.  These quantities are consistent with dense random
+packings of polydisperse ceramic pebbles and support the use of this RVE as a
+controlled local geometry rather than as an arbitrary sphere cloud.
+
+The combination of PF, radius distribution, CN distribution and specific
+surface area also indicates that the selected packing is a typical dense
+configuration for a polydisperse ceramic pebble bed within the present parameter
+space.  Independent random realisations with the same nominal PF, particle-size
+distribution and Li$_4$SiO$_4$/Be volume fractions would alter the exact
+locations of contacts, void throats and local first-collision sites.  However,
+they would be expected to preserve the same statistical void topology, mean
+coordination environment and interfacial area scale.  Such sample-to-sample
+differences may therefore introduce moderate stochastic fluctuations in local
+mesh tallies, but they are unlikely to reverse the overall trend or order of
+magnitude of the homogenisation bias, which is controlled by the presence of an
+explicit connected He void topology rather than by a particular particle
+arrangement.
+
+The near-wall packing perturbation should be distinguished from the bulk-bed
+region sampled by the present homogenisation comparison.  The disturbed layer is
+limited to roughly one pebble diameter near the axial boundaries, whereas most
+of the RVE retains a nearly constant PF close to 0.62.  Its influence on the
+volume-integrated OpenMC tallies is therefore limited compared with the
+dominant contribution from the interior pebble network.  Accordingly, this RVE
+is used to assess homogenisation bias in the approximately uniform bulk region
+of a pebble bed, not wall-boundary-layer behaviour.
+
+The use of a finite 800-particle RVE is a limitation of the present study.  It
+provides a controlled microstructural realisation for isolating the effect of
+explicit Li$_4$SiO$_4$/Be/He topology.  To reduce the risk that the result is tied
+to one particle arrangement, three independent PF=0.618 strict hard-sphere
+realisations were also transported and compared with their matched homogenised
+models.  Future work should extend this repeatability check to larger RVEs and,
+where mechanically realistic packed beds are required, to independently
+validated DEM or experimental particle configurations.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig1_microstructure.pdf}
+\caption{Strict non-overlapping hard-sphere pebble-bed microstructure used
+to construct the geometry-resolved RVE.  The data are taken from the audited
+particle list exported to the OpenMC constructive solid geometry model.  Panel
+(a) shows the $x$--$z$ projection of Li$_4$SiO$_4$ breeder and Be multiplier
+pebbles; both spatial axes are in cm.  Panel (b) shows the local axial packing
+fraction (PF) as a function of $z$ (cm), with the dashed line indicating the
+nominal mean PF of 0.620.  The audited baseline OpenMC comparison uses
+PF=0.618.  Panel (c) shows the pebble-radius distribution in mm, and
+panel (d) shows the dimensionless coordination number (CN), defined as the
+number of mechanical contacts per pebble.  These are deterministic geometry
+metrics; no Monte Carlo statistical uncertainty is associated with this
+figure.}
+\label{fig:microstructure}
+\end{figure}
+
+\subsection{Resolved geometry changes the global reaction balance}
+
+Replacing the homogenised bed with explicit pebbles produces a statistically
+significant change in all principal tallies.  Relative to the
+material-equivalent homogenised model at PF=0.618, the resolved baseline
+increases TPR$_6$ by $+17.47\pm0.71$ \%, total H3-production response by
+$+29.13\pm0.25$ \% and $^9$Be(n,2n) by $+45.80\pm0.11$ \%, while decreasing the
+local heating tally by $-18.49\pm0.04$ \% and increasing the track-length flux by
+$+23.08\pm0.09$ \%.  These differences are substantially larger than the
+propagated Monte Carlo statistical uncertainties.  The corresponding absolute
+homogenised and resolved tally values are retained in the supporting data rather
+than repeated as a main-text table, because the same relative shifts are shown
+graphically in the PF-sensitivity analysis.
+
+The comparison is controlled by construction.  All 13 material-inventory
+quantities, including $^6$Li, $^7$Li, $^9$Be, $^{28}$Si, $^{16}$O and $^4$He
+atom counts, solid and void volumes, and total masses, agree to $<0.02$ \%
+between the two models.  The tally shifts therefore reflect the spatial
+arrangement of the same three-phase Li$_4$SiO$_4$/Be/He medium rather than a
+change in elemental inventory.  In the homogenised model, the He void fraction
+is averaged into a uniform mixture.  A 14.07\,MeV D--T neutron therefore samples
+breeder, multiplier and purge gas through an effectively continuous macroscopic
+cross section.  In the resolved model, the inter-pebble He phase forms connected
+low-collision-probability channels.  These channels increase the probability
+that a source neutron travels several pebble diameters before its first
+collision, shifting the first-collision distribution toward discrete Be and
+breeder interfaces.
+
+This altered collision ordering explains why the relative increase in
+$^9$Be(n,2n) is much larger than the increase in TPR$_6$.  The $^9$Be(n,2n)
+reaction is driven by the fast part of the spectrum and is therefore highly
+sensitive to whether 14-MeV neutrons retain sufficient energy when they enter
+Be-rich regions.  Explicit void channels preserve high-energy flight paths and
+increase the fast-neutron path length available for threshold multiplication in
+Be.  TPR$_6$, by contrast, is governed by the integrated production of tritium in
+$^6$Li after neutron multiplication, scattering and partial moderation.  The
+$^6$Li(n,t)$^4$He reaction samples a broader transport history than the
+threshold multiplication reaction.  Additional secondary neutrons generated in
+Be must still be transported, moderated and absorbed in breeder material before
+contributing to TPR$_6$.  Consequently, the Be multiplication rate responds more
+strongly to explicit void topology, whereas TPR$_6$ shows a smaller but still
+statistically significant increase.
+
+The reduction in the local OpenMC heating-score tally has the same transport origin.
+It does not indicate a lower amount of reacting material, because the inventory
+is conserved.  Instead, the resolved void topology redistributes energy
+deposition in space and energy.  A larger fraction of the
+source-neutron population streams through He channels, undergoes multiplication
+or scattering at displaced Be/breeder locations, and contributes to leakage
+through the vacuum faces of the open RVE.  Energy that would be deposited
+locally in the homogenised mixture is therefore partly shifted to different
+positions, reaction channels or leakage histories.  The simultaneous increase
+in total flux and decrease in local heating is thus physically consistent with
+longer neutron residence paths and spatially displaced energy deposition, not
+with an inconsistency in the heating tally.
+
+\subsection{The geometry effect persists across multiplier inventory}
+
+The baseline homogenisation bias remains positive over a broad range of
+breeder-to-multiplier ratios.  To test composition sensitivity, the explicit
+particle coordinates and radii were kept fixed while the solid-pebble inventory
+was relabelled from 10 to 60\,vol.\% Be.  Each relabelled resolved case was
+paired with a homogenised case having the same total solid inventory and the
+same axial vacuum boundary condition.  This protocol isolates the effect of
+void topology from the effect of changing the total amount of Be.
+
+Across the full sweep, the resolved model enhances TPR$_6$ by
+$+13.62$--$+17.91$ \% (Fig.~\ref{fig:mechanism_sweep}).  The $^9$Be(n,2n)
+enhancement is larger but decreases monotonically from $+52.30\pm0.11$ \% to
+$+40.05\pm0.07$ \% as the Be inventory increases, indicating partial saturation
+of the multiplier response.  By contrast, the
+total flux enhancement remains positive and slowly increases from
+$+21.84\pm0.06$ \% to $+23.70\pm0.07$ \%, whereas the OpenMC heating-score response remains
+lower in the resolved geometry ($-21.20\pm0.03$ \% to $-17.33\pm0.03$ \%).
+Thus, the resolved-geometry
+effect is not a single-composition anomaly, but a systematic transport effect
+whose partitioning among breeding, multiplication and heating depends on
+multiplier inventory.
+
+The monotonic decrease in the relative $^9$Be(n,2n) enhancement reflects the
+evolution of the fast-neutron field as the multiplier fraction increases.  The
+$^9$Be(n,2n) channel is a threshold reaction controlled by the portion of the
+spectrum that remains above the reaction threshold after 14.07\,MeV source
+neutrons stream through He voids and scatter in the solid pebbles.  At low Be
+fraction, the homogenised model dilutes Be uniformly through the RVE.  The
+resolved model instead allows high-energy neutrons to stream through connected
+He pores and intersect discrete Be pebbles before substantial energy
+degradation.  Explicit geometry therefore produces a large relative increase in
+the probability that a fast neutron samples a Be target while it still has
+sufficient energy for multiplication.  As the Be fraction increases, both the
+homogenised and resolved models already provide a high probability of Be
+encounter along a typical neutron trajectory.  The additional benefit of
+explicit void topology then becomes smaller in relative terms, even though the
+absolute multiplication probability increases with Be inventory.
+
+This behaviour indicates multiplier-reaction saturation rather than a loss of
+the geometric effect.  Increasing the number of Be pebbles raises the material
+concentration available for $^9$Be(n,2n), but it also increases competition
+among neighbouring Be regions for the same population of uncollided or weakly
+moderated fast neutrons.  Once streamed neutrons are already likely to collide
+with Be within their first few collisions, additional Be mainly replaces
+breeder or He space along trajectories that have partly lost energy.  These
+later collisions contribute less efficiently to the threshold reaction because
+the spectrum has been softened by elastic and inelastic scattering.  Resolved
+pebble contacts and finite Be domains also introduce a self-shielding-like
+effect.  The outer portions of Be pebbles preferentially intercept the
+fast-neutron current, whereas inner or downstream Be volume is sampled after
+attenuation and energy degradation.  Thus, the material-concentration effect
+increases the available number of Be target atoms, while the geometry effect
+controls how much high-energy path length is exposed to those targets.  The
+decreasing relative gain from $+52.30$ \% to $+40.05$ \% indicates that the latter
+effect approaches a saturated regime as the accessible fast-neutron current
+becomes the limiting quantity.
+
+The coupled trends in TPR$_6$ and flux are consistent with this interpretation.
+The total flux enhancement remains nearly constant over the Be-fraction sweep,
+showing that the principal topological change is the redistribution of neutron
+free paths by the connected He void topology rather than a strong change in the
+overall neutron population.  The reaction-specific responses then depend on how
+this redistributed flux samples energy-dependent cross sections.  The
+$^9$Be(n,2n) response decreases in relative magnitude because the threshold
+multiplier channel is limited by the availability of fast neutrons in Be-rich
+regions.  TPR$_6$ varies more weakly because tritium production integrates
+multiplication, scattering, moderation and absorption in $^6$Li-bearing
+Li$_4$SiO$_4$ pebbles.  Secondary neutrons generated in Be can increase the
+neutron supply to the breeder, but the concurrent reduction in breeder fraction
+and the requirement for transport into Li$_4$SiO$_4$ moderate the TPR$_6$ response.
+The Be-fraction sweep therefore separates a material-inventory effect, which
+changes the number of multiplier targets, from a persistent topology effect,
+which controls neutron streaming, first-collision ordering and the exposure of
+Be to the fast part of the D--T spectrum.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{mechanism_pf62_be_fraction_shifts.pdf}
+\caption{Be multiplier-fraction sweep used to evaluate the composition
+dependence of the homogenisation bias.  Each point compares a geometry-resolved
+RVE with a matched homogenised RVE having the same total material inventory,
+the same 14.07 MeV source and the same axial vacuum boundary condition.  Panel
+(a) shows the resolved--homogenised relative shift, in percent, for TPR$_6$,
+$^9$Be(n,2n), OpenMC heating-score response and total flux as functions of the Be
+fraction in the solid pebble inventory (vol.\%).  Panel (b) gives the change in
+each relative shift between the 10 \% and 60 \% Be cases, expressed in
+percentage points (pp), to quantify the sweep amplitude.  Error bars denote one
+standard deviation (1$\sigma$) propagated from the paired OpenMC tallies; all
+tallies use ENDF/B-VII.1 cross-section data.}
+\label{fig:mechanism_sweep}
+\end{figure}
+
+
+\subsection{Packing-fraction sensitivity in strict hard-sphere RVEs}
+
+Packing-fraction sensitivity was evaluated with strict non-overlapping
+hard-sphere RVEs at PF values of 0.56, 0.58, 0.60, 0.61 and 0.618.  This
+sweep is interpreted as a controlled topology perturbation rather than as a
+thermal-expansion or irradiation-swelling model.  For each PF, the homogenised
+and resolved calculations use the same material inventory and source/boundary
+conditions, so the resolved--homogenised difference remains a topology-induced
+bias.
+
+The PF sweep shows a systematic attenuation of the resolved-geometry
+enhancement as the packing becomes denser (Fig.~\ref{fig:hardsphere_pf_sweep}).
+The TPR$_6$ shift decreases from $+22.92\pm0.85$ \% at PF=0.56 to
+$+17.47\pm0.71$ \% at PF=0.618.  The total H3-production response shift
+decreases from $+34.88\pm0.29$ \% to $+29.13\pm0.25$ \%, and the
+$^9$Be(n,2n) shift decreases from $+51.67\pm0.11$ \% to
+$+45.80\pm0.11$ \%.  The heating shift weakens from $-21.99\pm0.04$ \% to
+$-18.49\pm0.04$ \%, whereas the flux shift remains positive and nearly
+constant, changing from $+22.39\pm0.09$ \% to $+23.08\pm0.09$ \%.  These
+trends indicate that the explicit-geometry effect is strongest when connected
+He void paths occupy a larger fraction of the RVE, because fast neutrons can
+stream farther before sampling solid material.  As PF increases, the void
+network narrows and the first-collision distribution of the resolved model
+moves closer to the volume-averaged collision probability of the homogenised
+model.  The homogenisation bias therefore decreases but does not vanish at
+dense packing.
+
+This PF dependence supports a topology-saturation interpretation for multiplier
+reactions.  Increasing PF raises the solid collision probability and reduces
+the relative importance of long He streaming paths.  However, the resolved
+$^9$Be(n,2n) enhancement remains larger than the TPR$_6$ enhancement throughout
+the sweep because the multiplier reaction remains more sensitive to the local
+fast-neutron exposure of Be surfaces.  The flux shift is comparatively
+insensitive to PF because the track-length tally records path-length
+redistribution over the whole RVE, whereas TPR$_6$, H3 production,
+$^9$Be(n,2n) and heating depend on where this redistributed flux samples
+energy-dependent reaction channels.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hardsphere_pf_sweep_shifts.pdf}
+\caption{Packing-fraction dependence of resolved--homogenised tally shifts in
+strict non-overlapping hard-sphere RVEs.  Each point represents a paired
+homogenised/resolved OpenMC calculation with the same material inventory,
+14.07 MeV source, reflective lateral boundaries, axial vacuum boundaries and
+ENDF/B-VII.1 neutron data.  Panel (a) shows the relative differences
+$(B/A-1)\times100$ \% for TPR$_6$, total H3-production response,
+$^9$Be(n,2n), heating and track-length flux.  Panel (b) gives the change in
+each relative shift between PF=0.560 and PF=0.618, expressed in percentage
+points (pp), to highlight the densification response.  Error bars denote
+propagated one-standard-deviation (1$\sigma$) tally uncertainties.}
+\label{fig:hardsphere_pf_sweep}
+\end{figure}
+
+\subsection{Boundary-condition, heating-score and nuclear-data sensitivity}
+
+The PF=0.618 baseline was extended with three targeted sensitivity checks.
+First, the axial vacuum faces were
+replaced by reflective boundaries while keeping the same hard-sphere particle
+list, material inventory and ENDF/B-VII.1 data.  In this all-reflective local
+RVE, the resolved--homogenised TPR$_6$ shift decreases from
+$+17.47\pm0.71$ \% to $+15.57\pm0.72$ \%, and the total H3-production response
+shift decreases from $+29.13\pm0.25$ \% to $+15.91\pm0.71$ \%.  The reduction
+confirms that axial vacuum leakage amplifies part of the local breeding
+response.  However, the $^9$Be(n,2n) shift remains large
+($+61.52\pm0.87$ \%), showing that the threshold multiplier response is still
+controlled by the exposure of discrete Be surfaces to fast neutrons even when
+leakage is suppressed.  The all-reflective result should be interpreted as a
+local sensitivity calculation rather than a blanket-scale reflected-boundary
+design value, because the closed RVE also increases particle residence time and
+does not include structural attenuation or multilayer blanket leakage paths.
+
+Second, the PF=0.618 axial-vacuum pair was rerun with photon transport enabled.
+The coupled photon-transport run gives a
+heating shift of $-17.70\pm0.17$ \%, close to the neutron-mode heating shift of
+$-18.49\pm0.04$ \%.  This agreement indicates that the sign and approximate
+magnitude of the local heating redistribution are not artifacts of disabling
+photon transport in the main neutron-mode calculations.  The reaction-rate
+shifts in the photon run also remain consistent with the neutron-mode baseline,
+with TPR$_6$, H3 production and $^9$Be(n,2n) shifts of
+$+17.16\pm0.70$ \%, $+29.02\pm0.25$ \% and $+45.75\pm0.11$ \%, respectively.
+The unfiltered flux tally from the photon-transport run is retained in the
+source CSV for reproducibility but is not used as a neutron-flux metric because
+OpenMC includes all transported particle types in an unfiltered flux score when
+photon transport is enabled.
+
+Third, the PF=0.618 axial-vacuum pair was repeated with generated
+ENDF/B-VIII.0 and FENDL-3.2c neutron libraries.  The resolved--homogenised
+shifts remain consistent with the ENDF/B-VII.1 baseline.  With ENDF/B-VIII.0,
+TPR$_6$ changes from $+17.47\pm0.71$ \% to $+18.00\pm0.74$ \%, total H3
+production from $+29.13\pm0.25$ \% to $+29.32\pm0.26$ \%, $^9$Be(n,2n) from
+$+45.80\pm0.11$ \% to $+46.11\pm0.11$ \%, heating from $-18.49\pm0.04$ \% to
+$-19.01\pm0.04$ \% and track-length flux from $+23.08\pm0.09$ \% to
+$+23.14\pm0.09$ \%.  With FENDL-3.2c, the corresponding shifts are
+$+17.73\pm0.73$ \%, $+29.22\pm0.26$ \%, $+45.78\pm0.11$ \%,
+$-18.64\pm0.04$ \% and $+23.09\pm0.09$ \%.  The sign and magnitude of the
+topology-induced local bias are therefore not specific to the ENDF/B-VII.1
+evaluation for the nuclides and neutron-mode responses considered here.  These
+results should be interpreted as targeted neutron-data checks, not as a
+complete nuclear-data uncertainty analysis.
+
+\input{tables/pf618_sensitivity_summary.tex}
+
+\subsection{Independent hard-sphere realisations give repeatable bias trends}
+
+The representativeness of the PF=0.618 hard-sphere result was tested with three
+independent non-overlapping realisations.  The repeatability check separates
+packing-to-packing variability from OpenMC tally uncertainty and directly
+addresses the limitation of using a single RVE realisation.
+
+The mean resolved--homogenised shifts over the three realisations are
+$+16.78$ \% for TPR$_6$, $+28.74$ \% for total H3-production response,
+$+45.69$ \% for $^9$Be(n,2n), $-18.52$ \% for heating and $+23.08$ \% for
+flux (Fig.~\ref{fig:hardsphere_seed_replicates}).  The corresponding sample
+standard deviations are 0.64, 0.28, 0.07, 0.04 and 0.13 percentage points,
+respectively.  The sign and magnitude of the main homogenisation bias are
+therefore robust to independent hard-sphere realisations within the tested
+parameter set.  This does not replace a full RVE-convergence study, but it
+shows that the principal mechanism is not caused by one particular particle
+arrangement.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hardsphere_pf618_seed_replicates.pdf}
+\caption{Resolved--homogenised tally shifts for three independent PF=0.618
+hard-sphere RVE realisations.  Panel (a) shows the relative shift for each
+independent packing, with the horizontal ranges indicating the min--max spread
+and the mean marker with sample-standard-deviation error bar.  Panel (b)
+summarises the packing-to-packing sample standard deviation in percentage
+points (pp).  This variability is distinct from OpenMC batchwise tally
+uncertainty.}
+\label{fig:hardsphere_seed_replicates}
+\end{figure}
+
+
+\subsection{Spectral and spatial diagnostics support the transport mechanism}
+
+The 50-group spectrum diagnostic links the tally shifts to neutron-energy
+redistribution.  In the PF=0.618 case, the resolved/homogenised flux ratio
+integrated over the 0.5 eV--0.1 MeV window is 1.520, and the corresponding
+ratio for 0.1--1.85 MeV is 1.549 (Fig.~\ref{fig:hardsphere_spectrum}).
+Above the approximate $^9$Be(n,2n) threshold of 1.85 MeV, the integrated ratio
+is 1.221.  Thus, the explicit geometry increases not only the total
+track-length flux but also the population of neutrons in the fast and
+intermediate energy ranges that feed multiplier reactions and subsequent
+breeder absorption.
+
+Qualitatively, the homogenised spectrum and the resolved spectrum represent two
+different moderation pathways for the same 14.07 MeV D--T source.  In the
+homogenised model, the source neutron continuously samples the volume-averaged
+Li$_4$SiO$_4$/Be/He macroscopic cross section, so scattering, threshold
+multiplication and absorption are mixed over a shortened effective transport
+scale.  In the resolved model, inter-pebble He channels provide low-density
+flight paths that delay the first solid collision and retain a larger
+fast-neutron component near discrete Be interfaces.  This harder local
+fast-neutron exposure directly supports the higher $^9$Be(n,2n) rate, while
+secondary neutrons produced in Be subsequently increase the neutron supply
+available for $^6$Li-bearing breeder pebbles.  The threshold-window increase
+therefore provides direct mechanistic support for the observed combination of
+enhanced TPR$_6$, enhanced H3-production response, enhanced multiplier reaction
+rate, increased flux and reduced local heating.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hardsphere_pf618_spectrum.pdf}
+\caption{Fifty-group neutron spectrum diagnostic for the PF=0.618 hard-sphere
+RVE.  Panel (a) shows the OpenMC track-length flux per lethargy per source
+neutron for the homogenised and geometry-resolved models.  Panel (b) shows the
+resolved/homogenised spectral-flux ratio for energy bins above 1 keV.  Panel
+(c) summarises the integrated resolved--homogenised flux shift in selected
+energy windows.  The
+vertical dashed line marks the approximate $^9$Be(n,2n) threshold at 1.85 MeV.
+The data are obtained from paired fixed-source OpenMC calculations with the same
+material inventory, source and boundary conditions.}
+\label{fig:hardsphere_spectrum}
+\end{figure}
+
+Mid-plane mesh diagnostics show that the resolved geometry redistributes local
+reaction rates within the RVE.  In the PF=0.618 mid-plane, the mean mesh-bin
+shifts are positive for TPR$_6$ and H3 production, negative for heating and
+weakly positive for flux, but individual bins exhibit large spatial variation
+because local material placement, void connectivity and tally statistics vary
+at the cell scale.  These maps should therefore be interpreted as evidence of
+spatial redistribution rather than as a deterministic correction field.  Their
+main role is to confirm that the global shifts arise from heterogeneous
+transport paths through the explicit Li$_4$SiO$_4$/Be/He topology.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hardsphere_pf618_midplane_mesh_shifts.pdf}
+\caption{Mid-plane mesh-bin resolved--homogenised shifts for the PF=0.618
+hard-sphere RVE.  The maps are extracted from the $8\times8\times8$ Cartesian
+OpenMC mesh at the RVE mid-plane.  Panels show the cell-wise relative shifts for
+(a) TPR$_6$, (b) total H3-production response, (c) heating and (d) track-length
+flux; panel (e) gives the corresponding distribution of mid-plane mesh-bin
+shifts, with boxes denoting the interquartile ranges and vertical ticks denoting
+the medians.  Spatial axes are $x$ and $y$ in cm.  Colour bars denote
+$(B/A-1)\times100$ \% for each mesh bin; mesh-bin statistical uncertainties are
+not plotted to preserve map readability.}
+\label{fig:hardsphere_spatial}
+\end{figure}
+
+% ============================================================
+\section{Discussion}
+% ============================================================
+
+The central result of this study is that homogenisation can change the local
+reaction balance of a breeder-bed RVE even when material inventory is conserved
+to high precision.  The effect is not limited to TPR$_6$.  $^9$Be(n,2n), total flux
+and local heating change in different directions, indicating a
+transport-history effect rather than a simple material-density effect.  The
+physical origin is
+the replacement of a connected three-phase void topology by a uniform
+macroscopic cross section in the homogenised model.  This distinction matters
+for coupled blanket analyses because thermal, swelling and damage calculations
+often use the same Monte Carlo tallies that are affected by homogenisation.
+
+\subsection{Relation to previous pebble-bed neutronics studies}
+
+The positive TPR$_6$ shift found here differs from the small negative
+zone-integrated Li-6 tritium-production deviation reported by Zhang and
+Guo~\cite{zhang2025} for a reflected helium-cooled blanket.  In their
+Li$_4$SiO$_4$ region-1 analysis, the random-packing local-bin deviations
+relative to homogenisation ranged from -8.05 \% to +2.41 \%, whereas the
+integrated deviation was only -0.15 \%.  This difference should not be read as
+a contradiction.
+Reflected-neutron effects are known to influence fusion-blanket tritium-production
+interpretation~\cite{sato2008},
+and the two calculations isolate different parts of the problem.  Four modelling
+choices are particularly important:
+
+\begin{enumerate}[nosep]
+\item \textbf{Boundary conditions.}  Our vacuum $\pm Z$ allows streaming
+      neutrons to exit, maximising the streaming effect; their reflective
+      azimuthal boundaries and Be reflector layers recirculate neutrons,
+      reducing net enhancement.
+\item \textbf{Packing-fraction distribution.}  Our Lubachevsky--Stillinger (LS)
+      algorithm gives near-constant PF
+      ($\approx$0.62) throughout; their random packing exhibits $\pm$8 \%
+      near-wall PF oscillations that drive compensating negative local
+      deviations.
+\item \textbf{Material composition.}  Our model includes 40~vol\% Be
+      multiplier, whose (n,2n) reactions thermalise the spectrum and increase
+      $^6$Li absorption; their Section~4 uses pure Li$_4$SiO$_4$.
+\item \textbf{Source.}  Monoenergetic vs.\ Gaussian-distributed.
+\end{enumerate}
+
+The present calculation is therefore a controlled local homogenisation test,
+whereas Zhang and Guo address a more blanket-like reflected configuration.
+Together, the two studies indicate that explicit pebble geometry can remain
+locally important even when a full-blanket global tritium-production shift is small.
+
+\subsection{Boundary-condition scope and engineering interpretation}
+
+The vacuum boundaries on the axial $z$ faces create a strong leakage channel
+and amplify free-streaming effects through the connected He void topology.  In
+this configuration, a 14.07\,MeV D--T neutron entering an inter-pebble void can
+travel farther before collision, reach discrete Be or Li$_4$SiO$_4$ interfaces
+with less spectral degradation, or leave the RVE through the vacuum faces.  This
+boundary choice isolates the homogenisation error associated with replacing the
+explicit three-phase topology by a uniform macroscopic cross section.  The
+absolute homogenised--resolved differences reported here should therefore be
+regarded as leakage-sensitive upper-bound estimates for this local RVE, not as
+direct full-blanket design margins.
+
+The all-reflective sensitivity calculation confirms that this boundary effect is
+not merely qualitative.  Suppressing axial leakage reduces the TPR$_6$ shift from
+$+17.47\pm0.71$ \% to $+15.57\pm0.72$ \% and reduces the total H3-production
+shift from $+29.13\pm0.25$ \% to $+15.91\pm0.71$ \%.  The local heating shift
+also weakens from $-18.49\pm0.04$ \% to $-1.89\pm0.38$ \%, indicating that
+neutron return partially compensates the leakage-driven reduction in local
+energy deposition.  By contrast, the $^9$Be(n,2n) shift increases to
+$+61.52\pm0.87$ \%.  This behaviour is physically plausible for a closed local
+RVE: reflected fast and epithermal histories increase the residence time and
+allow repeated sampling of discrete Be surfaces, while the homogenised model
+still distributes Be continuously through the volume.  The result therefore
+shows that boundary conditions can change not only the magnitude but also the
+partitioning of the homogenisation bias among breeding, multiplication, flux and
+heating responses.
+
+The engineering implication is therefore not that the numerical shifts in this
+RVE can be inserted directly into a solid breeder blanket design.  Rather, the
+RVE provides a controlled upper-bound test of the mechanism by which pebble-bed
+topology changes neutron free path, collision ordering, spectral degradation and
+reaction-site distribution.  For reflected or multilayer blanket calculations,
+the appropriate transfer of this result is to retain the mechanism, not the
+absolute percentage values.  A practical workflow is to use explicit
+geometry-resolved RVEs as local correction or uncertainty-quantification models
+inside representative blanket zones, repeat the comparison under the actual
+module boundary condition or response-matrix environment, and then propagate the
+resulting local homogenisation bias to full-sector Monte Carlo calculations.
+Such an approach would allow the effects identified here, namely void-channel
+streaming, fast-neutron exposure of Be, breeder absorption after moderation and
+spatial redistribution of nuclear heating, to be evaluated under realistic
+reflective neutron return, coolant-channel shielding and structural-material
+attenuation.
+
+The PF and composition sweeps are parametric local sensitivity studies.  They
+show that the sign and order of the local homogenisation bias persist under
+controlled hard-sphere topology and Be-inventory perturbations, but they do not
+constitute a validated thermal-expansion, irradiation-swelling or full-blanket
+feedback model.  The absolute RVE-level TPR$_6$, the magnitude of
+leakage-driven spatial peaks and any architecture-specific breeding margin
+remain outside the claims of this paper.
+
+On this basis, a reflective or multilayer blanket environment should not be
+represented by directly transferring the axial-vacuum percentages.  The new
+all-reflective RVE check demonstrates sensitivity to neutron return, but it is
+still a closed local cell rather than a multilayer blanket segment with
+structural attenuation, coolant channels and finite leakage.  A modern
+engineering application therefore requires reflected or multilayer OpenMC
+calculations with the relevant blanket architecture before any quantitative
+correction is applied to design.
+
+\subsection{Engineering use of the homogenised model}
+
+The present results can be translated into a practical screening rule for
+engineering neutronics, provided that the rule is applied to local modelling
+choices rather than to the final blanket breeding margin.  In regions where a
+paired resolved--homogenised comparison, or an experimentally validated local
+correction, indicates a TPR$_6$ deviation below about 5 \%, the homogenised model
+may be acceptable for preliminary design studies, global optimisation and
+parametric screening, especially when the quantity of interest is an
+integral blanket response.  This threshold is not a universal safety criterion.
+It is a pragmatic engineering tolerance below which the geometry-induced
+uncertainty is comparable to other modelling uncertainties in early blanket
+analysis.  Conversely, the present RVE gives TPR$_6$ deviations of
+$+13.62$--$+17.91$ \% across the Be-fraction sweep, together with much larger
+$^9$Be(n,2n) deviations and a substantial heating redistribution.  A deviation
+of this order should be treated as evidence that explicit pebble geometry, or a
+locally calibrated correction factor derived from resolved RVEs, is required
+before the result is used in design-sensitive tritium-production or nuclear-heat
+assessments.
+
+The model choice should also depend on the structural location within the
+blanket.  In the approximately uniform bulk region of a pebble bed, where the
+packing fraction is close to its interior value and large void clusters are
+absent, homogenisation can remain useful if the local bias is demonstrated to
+fall within the acceptable range defined above.  Near-wall boundary layers,
+purge-gas gaps, coolant-channel neighbourhoods, local packing defects and
+regions with concentrated void connectivity require a more conservative
+treatment.  In these zones, neutron streaming, first-collision ordering and
+spectral hardening are governed by geometry rather than by the volume-averaged
+material composition, so explicit geometry or a resolved-RVE-based correction
+should be used for TPR$_6$, $^9$Be(n,2n), flux and heating tallies.
+
+The operating state provides a second screening dimension.  For a static pebble bed
+with a stable packing fraction and no significant irradiation-induced
+redistribution, a homogenised model may be adequate after a one-time
+resolved-RVE verification of the local bias.  If future thermal-expansion,
+uniform-swelling or flux-correlated-swelling cases are used, they should first
+be regenerated as non-overlapping geometries with material-inventory-conserving
+density scaling.  Until such calculations are available, the present PF sweep
+should be interpreted only as a controlled hard-sphere topology sensitivity
+study.
+
+Accordingly, the RVE results should be used as a correction basis and a
+decision framework for full-blanket calculations, not as direct design values.
+A recommended workflow is to perform full-sector calculations with homogenised
+materials, identify breeder-bed zones that are close to geometry-sensitive
+conditions, compute representative resolved RVEs for those zones under the
+actual material composition and boundary environment, and propagate the
+resulting local correction or uncertainty into the full model.  This workflow
+preserves the computational efficiency of homogenised neutronics while avoiding
+unqualified use of homogenisation in regions where pebble-scale topology
+controls multiplication, breeding or energy deposition.
+
+% ============================================================
+\section{Conclusions and outlook}
+% ============================================================
+
+This work demonstrates that explicit pebble-scale geometry provides a
+first-order local correction to homogenised neutronics in a strict hard-sphere
+Li$_4$SiO$_4$/Be breeder-bed RVE.  With identical material inventory at PF=0.618,
+the resolved baseline increases TPR$_6$ by $+17.47\pm0.71$ \%, total
+H3-production response by $+29.13\pm0.25$ \% and $^9$Be(n,2n) by
+$+45.80\pm0.11$ \%, while reducing the OpenMC heating score by
+$-18.49\pm0.04$ \% and increasing track-length flux by $+23.08\pm0.09$ \%.
+The hard-sphere PF sweep and Be-fraction sweep show that the bias persists
+under controlled topology and multiplier-inventory perturbations, and the
+independent-seed study confirms that the sign and order of the shifts are not
+tied to a single particle arrangement.
+
+The mechanism is controlled by connected He void topology.  Explicit void paths
+delay solid collisions, preserve fast-neutron exposure to Be, enhance
+threshold $^9$Be(n,2n) multiplication and redistribute local energy deposition.
+The 50-group spectrum diagnostic supports this interpretation by showing a
+resolved/homogenised flux ratio of 1.221 above the approximate $^9$Be(n,2n)
+threshold.  The ENDF/B-VIII.0 and FENDL-3.2c sensitivity runs preserve the same
+sign and approximate magnitude of the axial-vacuum local bias.  The
+ENDF/B-VIII.0 shifts are $+18.00\pm0.74$ \% for TPR$_6$,
+$+29.32\pm0.26$ \% for total H3 production, $+46.11\pm0.11$ \% for
+$^9$Be(n,2n), $-19.01\pm0.04$ \% for heating and $+23.14\pm0.09$ \% for
+flux.  The corresponding FENDL-3.2c shifts are $+17.73\pm0.73$ \%,
+$+29.22\pm0.26$ \%, $+45.78\pm0.11$ \%, $-18.64\pm0.04$ \% and
+$+23.09\pm0.09$ \%.  The all-reflective sensitivity check reduces the TPR$_6$ and
+H3-production shifts to $+15.57\pm0.72$ \% and $+15.91\pm0.71$ \%, respectively,
+while increasing the $^9$Be(n,2n) shift to $+61.52\pm0.87$ \%; this confirms
+that boundary conditions modify the partitioning of the local bias.  A
+photon-transport rerun gives a heating shift of $-17.70\pm0.17$ \%, close to the
+neutron-mode value, supporting the robustness of the heating-redistribution
+interpretation.  The reported quantities are source-normalised local RVE
+responses, not full-blanket TBR margins.  Future work should extend the same
+audited workflow to multilayer blanket environments and validated
+microstructure-evolution geometries that conserve material inventory and remain
+strictly non-overlapping.
+
+\section*{Data and code availability}
+
+The input particle lists, OpenMC input-generation scripts, post-processing
+scripts, processed tally CSV files, figure source data and manuscript build
+files are available at
+\url{https://github.com/wangjianfttt/fusion-pebble-bed-rve-openmc-data} and
+archived on Zenodo at \url{https://doi.org/10.5281/zenodo.20636518}.
+Continuous-energy nuclear-data libraries are not redistributed because of their
+size and licensing conditions; the exact library names, source URLs, processing
+tools, checksums and local \texttt{cross\_sections.xml} paths used in the
+calculations are recorded in the data package.
+
+\section*{CRediT authorship contribution statement}
+
+Jian Wang: Conceptualization, Methodology, Software, Investigation, Formal
+analysis, Visualization, Writing -- original draft.  Haoxi Wang: Methodology,
+Writing -- review and editing.  Zhiyuan Liu: Application context, Methodology,
+Writing -- review and editing.  Haishun Deng: Application context, Validation
+planning, Writing -- review and editing.  Wei Wen: Data curation,
+Visualization, Writing -- review and editing.  Gang Shen: Supervision, Project
+administration, Writing -- review and editing.
+
+\section*{Declaration of competing interest}
+
+The authors declare no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this
+paper.
+
+\section*{Acknowledgements}
+
+This work was supported by the Anhui Intelligent Mine Technology and Equipment
+Engineering Research Center (AIMTEERC202307), the Anhui Provincial Natural
+Science Foundation (2408085QA030), the Science Foundation of the Institute of
+Plasma Physics, Chinese Academy of Sciences (DSJJ-2025-08), and the China
+Post-doctoral Science Foundation under Grant Number 2024M753266.
+
+% ============================================================
+\begin{thebibliography}{22}
+
+\bibitem{giancarli2018}
+Giancarli L, et al.\ ITER TBM Program and associated system engineering.
+\textit{Fusion Eng.\ Des.} 2018;136:815--821.
+doi:10.1016/j.fusengdes.2018.04.014.
+
+\bibitem{fischer2015}
+Fischer U, et al.\ Neutronics requirements for a DEMO fusion power plant.
+\textit{Fusion Eng.\ Des.} 2015;98--99:2134--2137.
+doi:10.1016/j.fusengdes.2015.02.029.
+
+\bibitem{romano2015}
+Romano PK, Forget B.\ OpenMC: A state-of-the-art Monte Carlo code for research
+and development. \textit{Ann.\ Nucl.\ Energy} 2015;82:90--97.
+doi:10.1016/j.anucene.2014.07.048.
+
+\bibitem{zhang2025}
+Zhang S, Guo H.\ Neutronic effects of the pebble bed model on tritium breeding
+calculations for fusion blankets. \textit{Fusion Eng.\ Des.} 2025;220:115377.
+doi:10.1016/j.fusengdes.2025.115377.
+
+\bibitem{sato2006}
+Sato S, et al.\ Experimental study on nuclear properties of water cooled pebble
+bed blanket. In: \textit{Proceedings of the 21st IAEA Fusion Energy
+Conference}; 2006. Paper FT/P5-13.
+
+\bibitem{bernal64}
+Bernal JD.\ The Bakerian Lecture, 1962: The structure of liquids.
+\textit{Proc.\ R.\ Soc.\ Lond.\ A} 1964;280:299--322.
+doi:10.1098/rspa.1964.0147.
+
+\bibitem{jodrey85}
+Jodrey WS, Tory EM.\ Computer simulation of close random packing of equal
+spheres. \textit{Phys.\ Rev.\ A} 1985;32:2347--2351.
+doi:10.1103/PhysRevA.32.2347.
+
+\bibitem{sato2008}
+Sato S, et al.\ Impact of reflected neutrons on accuracy of tritium production
+rate prediction in blanket mock-ups for fusion reactors.
+\textit{Fusion Eng.\ Des.} 2008;83:1304--1308.
+doi:10.1016/j.fusengdes.2008.08.004.
+
+\bibitem{batistoni2007}
+Batistoni P, Angelone M, Bettinali L, Carconi P, Fischer U, Kodeli I, et al.\
+Neutronics experiment on a helium cooled pebble bed (HCPB) breeder blanket
+mock-up. \textit{Fusion Eng.\ Des.} 2007;82:2095--2104.
+doi:10.1016/j.fusengdes.2007.04.009.
+
+\bibitem{zhu2021}
+Zhu Q, Chen W, Bao J, Zhao Z, Du H, Huang K, et al.\ Experimental study on
+tritium breeding in water-cooled ceramic breeder blanket mock-up under D--T
+neutron irradiation conditions. \textit{Nucl.\ Fusion} 2021;61:066018.
+doi:10.1088/1741-4326/abed84.
+
+\bibitem{valentine2022}
+Valentine A, Berry T, Bradnam S, Hagues J, Hodson J.\ Benchmarking of emergent
+radiation transport codes for fusion neutronics applications.
+\textit{Fusion Eng.\ Des.} 2022;180:113197.
+doi:10.1016/j.fusengdes.2022.113197.
+
+\bibitem{kodeli2021}
+Kodeli IA, Sartori E.\ SINBAD -- Radiation shielding benchmark experiments.
+\textit{Ann.\ Nucl.\ Energy} 2021;159:108254.
+doi:10.1016/j.anucene.2021.108254.
+
+\bibitem{konno2010}
+Milocco A, Trkov A, Kodeli IA.\ The OKTAVIAN TOF experiments in SINBAD:
+Evaluation of the experimental uncertainties.
+\textit{Ann.\ Nucl.\ Energy} 2010;37:443--449.
+doi:10.1016/j.anucene.2009.12.016.
+
+\bibitem{gong2017}
+Gong B, et al.\ Investigation on the packing behaviors and mechanics of
+Li$_4$SiO$_4$ pebble beds by discrete element method.
+\textit{Fusion Eng.\ Des.} 2017;125:551--555.
+doi:10.1016/j.fusengdes.2017.04.049.
+
+\bibitem{shen2020}
+Shen Q, et al.\ Neutronics effects of homogeneous model on solid breeder
+blanket of CFETR. \textit{Fusion Eng.\ Des.} 2020;160:111825.
+doi:10.1016/j.fusengdes.2020.111825.
+
+\bibitem{zhang2022}
+Zhang H, et al.\ Packing characteristics of pebble beds for fusion reactors
+under different friction coefficients.
+\textit{Fusion Eng.\ Des.} 2022;176:113051.
+doi:10.1016/j.fusengdes.2022.113051.
+
+\bibitem{wang2020}
+Wang X, et al.\ Three-dimensional validation and analyses of the optimized
+CFETR HCCB blanket. \textit{Fusion Eng.\ Des.} 2020;161:111971.
+doi:10.1016/j.fusengdes.2020.111971.
+
+\bibitem{brown2018endfb8}
+Brown DA, Chadwick MB, Capote R, et al.\ ENDF/B-VIII.0: The 8th major release
+of the nuclear reaction data library with CIELO-project cross sections, new
+standards and thermal scattering data. \textit{Nucl.\ Data Sheets}
+2018;148:1--142. doi:10.1016/j.nds.2018.02.001.
+
+\bibitem{iaeaFendl32c}
+International Atomic Energy Agency Nuclear Data Section. Fusion Evaluated
+Nuclear Data Library, FENDL-3.2c. 2025. Available at:
+\url{https://nds.iaea.org/fendl/}; accessed 11 June 2026.
+
+\bibitem{schnabel2024fendl}
+Schnabel G, Aldama DL, Bohm T, et al.\ FENDL: A library for fusion research
+and applications. \textit{Nucl.\ Data Sheets} 2024;193:1--78.
+doi:10.1016/j.nds.2024.01.001.
+
+\bibitem{njoy2016}
+Macfarlane R, Muir DW, Boicourt RM, Kahler AC, Conlin JL. The NJOY Nuclear
+Data Processing System, Version 2016. Los Alamos National Laboratory report
+LA-UR-17-20093; 2017. doi:10.2172/1338791.
+
+\bibitem{openmcData}
+Shimwell J, et al. \texttt{openmc\_data}: tools for processing and downloading
+nuclear data for OpenMC. Available at:
+\url{https://github.com/openmc-data-storage/openmc_data}; accessed 11 June
+2026.
+
+\end{thebibliography}
+
+\end{document}

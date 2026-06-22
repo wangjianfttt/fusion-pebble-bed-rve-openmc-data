@@ -1,0 +1,5 @@
+Pebble-scale void topology affects Li4SiO4/Be blanket neutronics.
+Matched resolved and homogenised OpenMC RVEs isolate geometry effects.
+Explicit topology increases local TPR6 and Be(n,2n) responses.
+Boundary, photon and nuclear-data checks constrain the interpretation.
+Results guide homogenisation use in fusion breeder-blanket modelling.
